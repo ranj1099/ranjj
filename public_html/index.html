@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ckb">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranj Grup - سیستەمی بەڕێوەبردنی کڕیاران</title>
+    <style>
+        /* هەمان ستایلەکانی پێشوو */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tahoma', 'Arial', sans-serif;
+        }
+        
+        body {
+            background: #f0f2f5;
+        }
+        
+        .login-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #059669, #047857);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .login-box {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .login-box h1 {
+            color: #059669;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .login-box p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+        
+        .login-input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+        }
+        
+        .login-input:focus {
+            border-color: #059669;
+            outline: none;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: #059669;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        .login-btn:hover {
+            background: #047857;
+        }
+        
+        .dashboard {
+            display: none;
+            padding: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h2 {
+            color: #059669;
+            font-size: 18px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-name {
+            background: #059669;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        
+        .logout-btn {
+            padding: 4px 12px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 10px 15px;
+            background: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            color: #555;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            flex: 1;
+            min-width: 70px;
+        }
+        
+        .tab.active {
+            background: #059669;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 12px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 4px;
+            color: #555;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .btn-save {
+            padding: 12px 20px;
+            background: #059669;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 5px;
+        }
+        
+        .customers-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 15px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .customer-card {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            border-right: 4px solid #059669;
+        }
+        
+        .customer-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #059669;
+            margin-bottom: 5px;
+        }
+        
+        .customer-phone {
+            color: #666;
+            margin-bottom: 3px;
+            font-size: 13px;
+            direction: ltr;
+        }
+        
+        .customer-address {
+            color: #777;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .customer-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .btn-view {
+            padding: 6px 0;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            flex: 1;
+            font-size: 12px;
+        }
+        
+        .btn-delete {
+            padding: 6px 0;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            flex: 1;
+            font-size: 12px;
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+        
+        th {
+            background: #059669;
+            color: white;
+            padding: 8px 5px;
+            text-align: right;
+            font-size: 12px;
+        }
+        
+        td {
+            padding: 8px 5px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            margin: 12px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .modal-header h3 {
+            font-size: 16px;
+            color: #059669;
+        }
+        
+        .close-modal {
+            font-size: 22px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .logs-container {
+            max-height: 400px;
+            overflow-y: auto;
+            font-size: 12px;
+        }
+        
+        .log-item {
+            padding: 8px 5px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .log-time {
+            color: #999;
+            min-width: 70px;
+            font-size: 11px;
+        }
+        
+        .log-user {
+            background: #e5e7eb;
+            padding: 2px 8px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 11px;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #059669;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 3000;
+            display: none;
+            font-size: 14px;
+            text-align: center;
+            width: 90%;
+            max-width: 350px;
+        }
+        
+        .notification.error {
+            background: #ef4444;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            color: #059669;
+            margin-bottom: 12px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #059669;
+        }
+        
+        .empty-message {
+            text-align: center;
+            color: #999;
+            padding: 30px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-page" id="loginPage">
+        <div class="login-box">
+            <h1>Ranj Grup</h1>
+            <p>سیستەمی بەڕێوەبردنی کڕیاران و قیاس و قەرز</p>
+            
+            <input type="password" class="login-input" id="apiKey" placeholder="کلیلی API بنووسە">
+            <button class="login-btn" onclick="login()">چوونەژوورەوە</button>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification"></div>
+    
+    <div class="dashboard" id="dashboard">
+        <div class="header">
+            <h2>Ranj Grup</h2>
+            <div class="user-info">
+                <span class="user-name" id="userName"></span>
+                <span class="user-name" id="userRole" style="background: #3b82f6;"></span>
+                <button class="logout-btn" onclick="logout()">دەرچوون</button>
+            </div>
+        </div>
+        
+        <div class="tabs" id="tabsContainer"></div>
+        
+        <!-- تابی کڕیاران -->
+        <div id="customersTab" class="tab-content">
+            <div class="section-title">➕ زیادکردنی کڕیاری نوێ</div>
+            <div class="form-group">
+                <label>ناوی تەواو</label>
+                <input type="text" id="customerName" placeholder="ناوی کڕیار">
+            </div>
+            <div class="form-group">
+                <label>ژمارەی مۆبایل</label>
+                <input type="text" id="customerPhone" placeholder="٠٧٧٠ ٠٠٠ ٠٠٠٠">
+            </div>
+            <div class="form-group">
+                <label>ناونیشان</label>
+                <textarea id="customerAddress" placeholder="ناونیشان" rows="2"></textarea>
+            </div>
+            <button class="btn-save" onclick="addCustomer()">💾 زیادکردن</button>
+            
+            <input type="text" class="search-box" id="searchCustomer" placeholder="🔍 گەڕان بە ناو یان مۆبایل..." onkeyup="searchCustomers()">
+            <div class="customers-grid" id="customersList"></div>
+        </div>
+        
+        <!-- تابی قیاسەکان -->
+        <div id="measurementsTab" class="tab-content">
+            <div class="section-title">➕ زیادکردنی قیاسی نوێ</div>
+            <div class="form-group">
+                <label>کڕیار</label>
+                <select id="measurementCustomer">
+                    <option value="">کڕیار هەڵبژێرە</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>بەروار</label>
+                <input type="date" id="measurementDate">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group"><label>سنە (سم)</label><input type="number" id="chest" placeholder="٠"></div>
+                <div class="form-group"><label>ناوەڕاست (سم)</label><input type="number" id="waist" placeholder="٠"></div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group"><label>کەمەر (سم)</label><input type="number" id="hips" placeholder="٠"></div>
+                <div class="form-group"><label>شانی (سم)</label><input type="number" id="shoulder" placeholder="٠"></div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group"><label>قۆڵ (سم)</label><input type="number" id="sleeve" placeholder="٠"></div>
+                <div class="form-group"><label>درێژی (سم)</label><input type="number" id="dressLength" placeholder="٠"></div>
+            </div>
+            
+            <div class="form-group">
+                <label>تێبینی</label>
+                <textarea id="measurementNotes" rows="2" placeholder="تێبینی..."></textarea>
+            </div>
+            
+            <button class="btn-save" onclick="addMeasurement()">💾 پاشەکەوتکردن</button>
+            
+            <div class="section-title" style="margin-top: 20px;">📋 دوایین قیاسەکان</div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>کڕیار</th>
+                            <th>بەروار</th>
+                            <th>سنە</th>
+                            <th>ناوەڕاست</th>
+                            <th>کردار</th>
+                        </tr>
+                    </thead>
+                    <tbody id="measurementsList"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- تابی قەرزەکان -->
+        <div id="debtsTab" class="tab-content">
+            <div class="section-title">➕ تۆمارکردنی قەرزی نوێ</div>
+            <div class="form-group">
+                <label>کڕیار</label>
+                <select id="debtCustomer">
+                    <option value="">کڕیار هەڵبژێرە</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>جۆری پەردە</label><input type="text" id="fabricType" placeholder="جۆر"></div>
+                <div class="form-group"><label>بڕ (مەتر)</label><input type="number" id="fabricQuantity" placeholder="٠"></div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group"><label>کۆی پارە</label><input type="number" id="totalAmount" placeholder="٠"></div>
+                <div class="form-group"><label>پارەی پێشەکی</label><input type="number" id="paidAmount" placeholder="٠"></div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group"><label>بەرواری وەعدە</label><input type="date" id="dueDate"></div>
+            </div>
+            
+            <div class="form-group">
+                <label>تێبینی</label>
+                <textarea id="debtNotes" rows="2" placeholder="تێبینی..."></textarea>
+            </div>
+            
+            <button class="btn-save" onclick="addDebt()">💾 تۆمارکردن</button>
+            
+            <div class="section-title" style="margin-top: 20px;">💰 دوایین قەرزەکان</div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>کڕیار</th>
+                            <th>جۆر</th>
+                            <th>بڕ</th>
+                            <th>کۆی پارە</th>
+                            <th>پارەی پێشەکی</th>
+                            <th>ماوەتەوە</th>
+                            <th>کردار</th>
+                        </tr>
+                    </thead>
+                    <tbody id="debtsList"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- تابی تۆمارەکان -->
+        <div id="logsTab" class="tab-content">
+            <div class="section-title">📋 تۆماری کردارەکان</div>
+            <div class="logs-container" id="activityLogs">
+                <div class="empty-message">هیچ تۆمارێک نیە</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- مۆدالی پارەدان -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>💰 تۆمارکردنی پارەدان</h3>
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="form-group">
+                <label>بڕی پارە</label>
+                <input type="number" id="paymentAmount" placeholder="بڕی پارە">
+            </div>
+            <div class="form-group">
+                <label>بەروار</label>
+                <input type="date" id="paymentDate">
+            </div>
+            <button class="btn-save" onclick="recordPayment()">💾 تۆمارکردن</button>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let currentDebtId = null;
+        const API_URL = 'http://localhost/ranj_grup/api/'; // گۆڕینی بە ڕێڕەوی ڕاستەقینە
+
+        window.onload = function() {
+            document.getElementById('measurementDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('dueDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('paymentDate').value = new Date().toISOString().split('T')[0];
+            
+            // پشکنینی ئەگەر پێشتر چووبێتە ژوورەوە
+            const savedUser = localStorage.getItem('ranj_user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                document.getElementById('userName').textContent = currentUser.full_name;
+                document.getElementById('userRole').textContent = currentUser.role === 'admin' ? 'ئەدمین' : 'مووچەخۆر';
+                setupTabsBasedOnRole();
+                loadAllData();
+            }
+        };
+
+        function showNotification(message, isError = false) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            notification.className = 'notification' + (isError ? ' error' : '');
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 2000);
+        }
+
+        async function login() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            
+            if (!apiKey) {
+                showNotification('تکایە کلیلی API بنووسە', true);
+                return;
+            }
+
+            try {
+                const response = await fetch(API_URL + 'login.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ api_key: apiKey })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentUser = data.user;
+                    localStorage.setItem('ranj_user', JSON.stringify(currentUser));
+                    localStorage.setItem('ranj_api_key', apiKey);
+                    
+                    document.getElementById('loginPage').style.display = 'none';
+                    document.getElementById('dashboard').style.display = 'block';
+                    document.getElementById('userName').textContent = currentUser.full_name;
+                    document.getElementById('userRole').textContent = currentUser.role === 'admin' ? 'ئەدمین' : 'مووچەخۆر';
+                    
+                    setupTabsBasedOnRole();
+                    loadAllData();
+                    
+                    showNotification('بەخێربێیت ' + currentUser.full_name);
+                } else {
+                    showNotification(data.message, true);
+                }
+            } catch (error) {
+                showNotification('هەڵە لە پەیوەندی بە سێرڤەر', true);
+                console.error(error);
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('ranj_user');
+            localStorage.removeItem('ranj_api_key');
+            currentUser = null;
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('apiKey').value = '';
+            showNotification('بە سەرکەوتوویی دەرچوویت');
+        }
+
+        function setupTabsBasedOnRole() {
+            const tabsContainer = document.getElementById('tabsContainer');
+            let tabs = `
+                <button class="tab active" onclick="showTab('customers')">👥 کڕیاران</button>
+                <button class="tab" onclick="showTab('measurements')">📏 قیاسەکان</button>
+                <button class="tab" onclick="showTab('debts')">💰 قەرزەکان</button>
+            `;
+            
+            if (currentUser && currentUser.role === 'admin') {
+                tabs += `<button class="tab" onclick="showTab('logs')">📋 تۆمارەکان</button>`;
+            }
+            
+            tabsContainer.innerHTML = tabs;
+            
+            // پیشاندانی تابی یەکەم
+            showTab('customers');
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            const tabs = document.querySelectorAll('.tab');
+            for (let i = 0; i < tabs.length; i++) {
+                if (tabs[i].textContent.includes(tabName === 'customers' ? 'کڕیاران' :
+                                                  tabName === 'measurements' ? 'قیاسەکان' :
+                                                  tabName === 'debts' ? 'قەرزەکان' : 'تۆمارەکان')) {
+                    tabs[i].classList.add('active');
+                    break;
+                }
+            }
+            
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        async function loadAllData() {
+            await loadCustomers();
+            await loadMeasurements();
+            await loadDebts();
+            if (currentUser && currentUser.role === 'admin') {
+                await loadLogs();
+            }
+        }
+
+        async function apiCall(endpoint, method = 'GET', data = null) {
+            const apiKey = localStorage.getItem('ranj_api_key');
+            const url = API_URL + endpoint;
+            
+            const options = {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-API-Key': apiKey
+                }
+            };
+            
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+            
+            try {
+                const response = await fetch(url, options);
+                return await response.json();
+            } catch (error) {
+                console.error('API Error:', error);
+                showNotification('هەڵە لە پەیوەندی بە سێرڤەر', true);
+                return null;
+            }
+        }
+
+        // کڕیاران
+        async function loadCustomers() {
+            const data = await apiCall('customers.php');
+            if (data && data.success) {
+                displayCustomers(data.data);
+                loadCustomerSelects(data.data);
+            }
+        }
+
+        function displayCustomers(customers) {
+            const container = document.getElementById('customersList');
+            
+            if (!customers || customers.length === 0) {
+                container.innerHTML = '<div class="empty-message">هیچ کڕیارێک نیە</div>';
+                return;
+            }
+            
+            container.innerHTML = customers.map(c => `
+                <div class="customer-card" data-id="${c.id}">
+                    <div class="customer-name">${c.full_name}</div>
+                    <div class="customer-phone">📱 ${c.phone_number}</div>
+                    <div class="customer-address">📍 ${c.address || '-'}</div>
+                    <div class="customer-actions">
+                        <button class="btn-view" onclick="viewCustomerDetails(${c.id})">📋 وردەکاری</button>
+                        <button class="btn-delete" onclick="deleteCustomer(${c.id})">🗑️ سڕینەوە</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadCustomerSelects(customers) {
+            const measurementSelect = document.getElementById('measurementCustomer');
+            const debtSelect = document.getElementById('debtCustomer');
+            
+            if (!customers || customers.length === 0) {
+                measurementSelect.innerHTML = '<option value="">کڕیار نیە</option>';
+                debtSelect.innerHTML = '<option value="">کڕیار نیە</option>';
+                return;
+            }
+            
+            const options = customers.map(c => 
+                `<option value="${c.id}">${c.full_name} - ${c.phone_number}</option>`
+            ).join('');
+            
+            measurementSelect.innerHTML = '<option value="">کڕیار هەڵبژێرە</option>' + options;
+            debtSelect.innerHTML = '<option value="">کڕیار هەڵبژێرە</option>' + options;
+        }
+
+        async function addCustomer() {
+            const name = document.getElementById('customerName').value.trim();
+            const phone = document.getElementById('customerPhone').value.trim();
+            const address = document.getElementById('customerAddress').value.trim();
+            
+            if (!name || !phone) {
+                showNotification('ناو و ژمارەی مۆبایل پێویستە', true);
+                return;
+            }
+            
+            const data = await apiCall('customers.php', 'POST', {
+                full_name: name,
+                phone_number: phone,
+                address: address
+            });
+            
+            if (data && data.success) {
+                showNotification('✅ کڕیار زیاد کرا');
+                document.getElementById('customerName').value = '';
+                document.getElementById('customerPhone').value = '';
+                document.getElementById('customerAddress').value = '';
+                await loadCustomers();
+            }
+        }
+
+        async function deleteCustomer(id) {
+            if (!confirm('دڵنیایت لە سڕینەوە؟')) return;
+            
+            const data = await apiCall(`customers.php?id=${id}`, 'DELETE');
+            if (data && data.success) {
+                showNotification('✅ کڕیار سڕایەوە');
+                await loadCustomers();
+                await loadMeasurements();
+                await loadDebts();
+            }
+        }
+
+        // قیاسەکان
+        async function loadMeasurements() {
+            const data = await apiCall('measurements.php');
+            if (data && data.success) {
+                displayMeasurements(data.data);
+            }
+        }
+
+        function displayMeasurements(measurements) {
+            const tbody = document.getElementById('measurementsList');
+            
+            if (!measurements || measurements.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-message">هیچ قیاسێک نیە</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = measurements.map(m => `
+                <tr>
+                    <td>${m.customer_name}</td>
+                    <td>${m.measurement_date}</td>
+                    <td>${m.chest_cm || '٠'}</td>
+                    <td>${m.waist_cm || '٠'}</td>
+                    <td>
+                        <button class="btn-view" onclick="showMeasurementDetails(${m.id})">📋</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function addMeasurement() {
+            const customerId = document.getElementById('measurementCustomer').value;
+            
+            if (!customerId) {
+                showNotification('کڕیار هەڵبژێرە', true);
+                return;
+            }
+            
+            const data = await apiCall('measurements.php', 'POST', {
+                customer_id: parseInt(customerId),
+                measurement_date: document.getElementById('measurementDate').value,
+                chest_cm: document.getElementById('chest').value || null,
+                waist_cm: document.getElementById('waist').value || null,
+                hips_cm: document.getElementById('hips').value || null,
+                shoulder_cm: document.getElementById('shoulder').value || null,
+                sleeve_length_cm: document.getElementById('sleeve').value || null,
+                dress_length_cm: document.getElementById('dressLength').value || null,
+                notes: document.getElementById('measurementNotes').value || null
+            });
+            
+            if (data && data.success) {
+                showNotification('✅ قیاس تۆمارکرا');
+                
+                document.getElementById('chest').value = '';
+                document.getElementById('waist').value = '';
+                document.getElementById('hips').value = '';
+                document.getElementById('shoulder').value = '';
+                document.getElementById('sleeve').value = '';
+                document.getElementById('dressLength').value = '';
+                document.getElementById('measurementNotes').value = '';
+                
+                await loadMeasurements();
+            }
+        }
+
+        function showMeasurementDetails(id) {
+            // دەتوانیت مۆدالێک دروستکەیت بۆ پیشاندانی وردەکاری
+        }
+
+        // قەرزەکان
+        async function loadDebts() {
+            const data = await apiCall('debts.php');
+            if (data && data.success) {
+                displayDebts(data.data);
+            }
+        }
+
+        function displayDebts(debts) {
+            const tbody = document.getElementById('debtsList');
+            
+            if (!debts || debts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-message">هیچ قەرزێک نیە</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = debts.map(d => `
+                <tr>
+                    <td>${d.customer_name}</td>
+                    <td>${d.fabric_type || '-'}</td>
+                    <td>${d.fabric_quantity || '٠'} م</td>
+                    <td>${d.total_amount}</td>
+                    <td>${d.paid_amount}</td>
+                    <td>${d.remaining_amount}</td>
+                    <td>
+                        <button class="btn-view" onclick="openPaymentModal(${d.id})">💰</button>
+                        <button class="btn-delete" onclick="deleteDebt(${d.id})">🗑️</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function addDebt() {
+            const customerId = document.getElementById('debtCustomer').value;
+            
+            if (!customerId) {
+                showNotification('کڕیار هەڵبژێرە', true);
+                return;
+            }
+            
+            const data = await apiCall('debts.php', 'POST', {
+                customer_id: parseInt(customerId),
+                fabric_type: document.getElementById('fabricType').value,
+                fabric_quantity: document.getElementById('fabricQuantity').value || 0,
+                total_amount: parseFloat(document.getElementById('totalAmount').value) || 0,
+                paid_amount: parseFloat(document.getElementById('paidAmount').value) || 0,
+                debt_date: new Date().toISOString().split('T')[0],
+                expected_payment_date: document.getElementById('dueDate').value,
+                notes: document.getElementById('debtNotes').value
+            });
+            
+            if (data && data.success) {
+                showNotification('✅ قەرز تۆمارکرا');
+                
+                document.getElementById('fabricType').value = '';
+                document.getElementById('fabricQuantity').value = '';
+                document.getElementById('totalAmount').value = '';
+                document.getElementById('paidAmount').value = '';
+                document.getElementById('debtNotes').value = '';
+                
+                await loadDebts();
+            }
+        }
+
+        async function deleteDebt(id) {
+            if (!confirm('دڵنیایت لە سڕینەوەی قەرز؟')) return;
+            
+            const data = await apiCall(`debts.php?id=${id}`, 'DELETE');
+            if (data && data.success) {
+                showNotification('✅ قەرز سڕایەوە');
+                await loadDebts();
+            }
+        }
+
+        function openPaymentModal(debtId) {
+            currentDebtId = debtId;
+            document.getElementById('paymentModal').style.display = 'flex';
+        }
+
+        async function recordPayment() {
+            const amount = parseFloat(document.getElementById('paymentAmount').value);
+            
+            if (!amount || amount <= 0) {
+                showNotification('بڕی پارە بنووسە', true);
+                return;
+            }
+            
+            const data = await apiCall('payments.php', 'POST', {
+                debt_id: currentDebtId,
+                amount: amount,
+                payment_date: document.getElementById('paymentDate').value,
+                notes: 'پارەدان لە ڕێگەی ئەپەوە'
+            });
+            
+            if (data && data.success) {
+                showNotification('✅ پارەدان تۆمارکرا');
+                closeModal();
+                document.getElementById('paymentAmount').value = '';
+                await loadDebts();
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+        }
+
+        // لۆگەکان
+        async function loadLogs() {
+            if (!currentUser || currentUser.role !== 'admin') return;
+            
+            const data = await apiCall('logs.php');
+            if (data && data.success) {
+                displayLogs(data.data);
+            }
+        }
+
+        function displayLogs(logs) {
+            const container = document.getElementById('activityLogs');
+            
+            if (!logs || logs.length === 0) {
+                container.innerHTML = '<div class="empty-message">هیچ تۆمارێک نیە</div>';
+                return;
+            }
+            
+            container.innerHTML = logs.map(l => `
+                <div class="log-item">
+                    <span class="log-time">${new Date(l.created_at).toLocaleString('ckb')}</span>
+                    <span class="log-user">${l.user_name}</span>
+                    <span>${l.details}</span>
+                    <span style="color: #666; font-size: 10px;">${l.ip_address}</span>
+                </div>
+            `).join('');
+        }
+
+        function searchCustomers() {
+            const query = document.getElementById('searchCustomer').value.toLowerCase();
+            const cards = document.querySelectorAll('.customer-card');
+            
+            cards.forEach(card => {
+                const name = card.querySelector('.customer-name').textContent.toLowerCase();
+                const phone = card.querySelector('.customer-phone').textContent.toLowerCase();
+                
+                if (name.includes(query) || phone.includes(query)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        async function viewCustomerDetails(customerId) {
+            // دەتوانیت وردەکاری کڕیار لە داتابەیسەوە وەربگریت
+            showNotification('بەم زووانە وردەکاری کڕیار زیاد دەکرێت');
+        }
+    </script>
+</body>
+</html>
